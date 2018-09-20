@@ -1,4 +1,5 @@
 import Vue from "vue";
+import "./plugins/vuetify";
 import ExamplesApp from "./ExamplesApp.vue";
 
 Vue.config.productionTip = false;
