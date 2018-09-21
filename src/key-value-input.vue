@@ -98,6 +98,8 @@ export default {
         this.$emit("input", v);
       },
     },
+    // The value as a list of pairs. Each pair is an array of the shape [key, value].
+    // This is easier to manipulate from the template.
     pairs: {
       get() {
         return Object.entries(this.effectiveValue).concat([["", ""]]);
@@ -112,6 +114,7 @@ export default {
     },
   },
   methods: {
+    // Updates the key of the pair at the given index
     changeKey(index, key) {
       const head = this.pairs.slice(0, index);
       const updatedPair = [key, this.pairs[index][1]];
@@ -119,6 +122,7 @@ export default {
 
       this.pairs = head.concat([updatedPair]).concat(tail);
     },
+    // Updates the value of the pair at the given index
     changeValue(index, value) {
       const head = this.pairs.slice(0, index);
       const updatedPair = [this.pairs[index][0], value];
