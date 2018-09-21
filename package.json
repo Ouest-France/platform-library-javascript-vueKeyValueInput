@@ -1,6 +1,6 @@
 {
   "name": "vue-key-value-input",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name vue-key-value-input src/key-value-input.vue",
@@ -8,7 +8,8 @@
     "lint": "vue-cli-service lint",
     "prepublish": "npm run build",
     "styleguide": "vue-cli-service styleguidist",
-    "styleguide:build": "vue-cli-service styleguidist:build"
+    "styleguide:build": "vue-cli-service styleguidist:build",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
@@ -28,11 +29,16 @@
     "codecov": "^3.1.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
+    "semantic-release": "^15.9.16",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-cli-plugin-styleguidist": "^0.1.7",
     "vue-cli-plugin-vuetify": "^0.2.0",
     "vue-template-compiler": "^2.5.17"
   },
-  "main": "dist/vue-key-value-input.umd.min.js"
+  "main": "dist/vue-key-value-input.umd.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenoitAverty/vue-key-value-input.git"
+  }
 }

@@ -1,9 +1,30 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/node:10
-    working_directory: ~/repo
+    steps:
+      # Configure your test steps here (checkout, npm install, cache management, tests etc...)
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+        
+      # run tests!
+      - run: npm run build
+      - run: npm run test && npx codecov
+
+  release:
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
       # Download and cache dependencies
@@ -12,16 +33,25 @@ jobs:
           - dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - dependencies-
-
       - run: npm install
-
       - save_cache:
           paths:
             - node_modules
           key: dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
-      - run: npm run test && npx codecov
-      - run: npm run build 
 
+      # release
+      - run: npm run release
 
+workflows:
+  version: 2
+  test_and_release:
+    # Run the test jobs first, then the release only when all the test jobs are successful
+    jobs:
+      - test
+      - release:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
