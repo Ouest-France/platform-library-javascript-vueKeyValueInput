@@ -158,6 +158,15 @@ describe("HelloWorld.vue", () => {
       expect(keysInputs.at(1).attributes()).toHaveProperty("value", "key2");
       expect(valuesInputs.at(1).attributes()).toHaveProperty("value", "value2");
     });
+
+    it("fires an input event if a new key is provided", () => {
+      wrapper.setProps({ value: { key1: "value1", key2: "value2" } });
+      // Check the emitted event
+      expect(wrapper.emitted().input).toHaveLength(1);
+      expect(wrapper.emitted().input[0]).toEqual([
+        { key1: "value1", key2: "value2" },
+      ]);
+    });
   });
 
   describe("updating a row", () => {
