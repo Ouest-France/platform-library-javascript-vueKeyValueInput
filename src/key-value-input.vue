@@ -1,14 +1,14 @@
 <template>
   <v-container fluid>
     <v-layout>
-      <v-flex v-if="keysLabel" data-test="keys-label">{{ keysLabel }}</v-flex><v-spacer v-else />
-      <v-flex v-if="valuesLabel" data-test="values-label">{{ valuesLabel }}</v-flex>
+      <v-flex mr-1 v-if="keysLabel" data-test="keys-label"><span class="subheading">{{ keysLabel }}</span></v-flex><v-spacer v-else />
+      <v-flex ml-1 v-if="valuesLabel" data-test="values-label"><span class="subheading">{{ valuesLabel }}</span></v-flex>
     </v-layout>
     <v-layout 
       v-for="([k, v],i) in pairs"
       :key="i"
     >
-      <v-flex>
+      <v-flex mr-1>
         <v-text-field 
           :placeholder="keysLabel"
           :value="k"
@@ -16,7 +16,7 @@
           data-test="key-input"
         />
       </v-flex>
-      <v-flex>
+      <v-flex ml-1>
         <v-text-field
         :placeholder="valuesLabel"
         :value="v"
