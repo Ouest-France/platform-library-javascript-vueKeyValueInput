@@ -2,6 +2,7 @@
 node_modules
 dist/
 coverage/
+styleguide/
 
 # local env files
 .env.local

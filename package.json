@@ -4,9 +4,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name vue-key-value-input src/key-value-input.vue",
-    "lint": "vue-cli-service lint",
     "test": "vue-cli-service test:unit --coverage --coverageReporters=lcov",
-    "prepublish": "npm run build"
+    "lint": "vue-cli-service lint",
+    "prepublish": "npm run build",
+    "styleguide": "vue-cli-service styleguidist",
+    "styleguide:build": "vue-cli-service styleguidist:build"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
@@ -27,6 +29,7 @@
     "sass-loader": "^7.0.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "vue-cli-plugin-styleguidist": "^0.1.7",
     "vue-cli-plugin-vuetify": "^0.2.0",
     "vue-template-compiler": "^2.5.17"
   },

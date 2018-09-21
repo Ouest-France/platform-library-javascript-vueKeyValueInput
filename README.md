@@ -1,26 +1,5 @@
 # vue-key-value-input
 
-## Project setup
-```
-npm install
-```
+Vuetify-based component that allows users to input a simple key/value map. Values can only be strings.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
+## **[Documentation](https://vue-key-value-input.now.sh)**

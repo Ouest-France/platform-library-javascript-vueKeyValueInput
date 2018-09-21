@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout>
-      <v-flex v-if="keysLabel" data-test="keys-label">{{ keysLabel }}</v-flex>
+      <v-flex v-if="keysLabel" data-test="keys-label">{{ keysLabel }}</v-flex><v-spacer v-else />
       <v-flex v-if="valuesLabel" data-test="values-label">{{ valuesLabel }}</v-flex>
     </v-layout>
     <v-layout 
@@ -50,23 +50,36 @@ function areEqualShallow(a, b) {
   return true;
 }
 
+/**
+ * This component allows the user to input a shallow key/value map. The values can only be strings, and the
+ * @author [BenoitAverty](https://github.com/BenoitAverty)
+ */
 export default {
   name: "key-value-input",
   props: {
+    /**
+     * Label of the "keys" column
+     */
     keysLabel: {
       type: String,
       required: false,
-      default: () => null,
+      default: null,
     },
+    /**
+     * Label of the "values" column
+     */
     valuesLabel: {
       type: String,
       required: false,
-      default: () => null,
+      default: null,
     },
+    /**
+     * Value of the component. If not provided, the component will manage its own internal state.
+     */
     value: {
       type: Object,
       required: false,
-      default: () => null,
+      default: null,
       validator: value => Object.values(value).every(isString),
     },
   },
@@ -95,6 +108,13 @@ export default {
       },
       set(v) {
         this.internalValue = v;
+
+        /**
+         * Event triggered at each value change.
+         *
+         * @event input
+         * @type {object}
+         */
         this.$emit("input", v);
       },
     },
