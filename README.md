@@ -1,7 +1,27 @@
 # vue-key-value-input
 
-[![CircleCI](https://img.shields.io/circleci/project/github/BenoitAverty/vue-key-value-input.svg?logo=circleci&style=for-the-badge)](https://circleci.com/gh/BenoitAverty/vue-key-value-input) [![codecov.io](https://img.shields.io/codecov/c/github/BenoitAverty/vue-key-value-input.svg?style=for-the-badge)](https://circleci.com/gh/BenoitAverty/vue-key-value-input)
+[![CircleCI](https://img.shields.io/circleci/project/github/BenoitAverty/vue-key-value-input.svg?logo=circleci&style=for-the-badge)](https://circleci.com/gh/BenoitAverty/vue-key-value-input) [![codecov.io](https://img.shields.io/codecov/c/github/BenoitAverty/vue-key-value-input.svg?style=for-the-badge)](https://circleci.com/gh/BenoitAverty/vue-key-value-input) [![npmjs.org](https://img.shields.io/npm/v/vue-key-value-input.svg?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/vue-key-value-input) 
 
 Vuetify-based component that allows users to input a simple key/value map. Values can only be strings.
 
 ## **[Documentation](https://vue-key-value-input.now.sh)**
+
+## Usage
+
+```
+<template>
+  <key-value-input v-model="example" />
+</template>
+
+<script>
+import KeyValueInput from 'vue-key-value-input';
+
+export default {
+  name: 'Component',
+  components: { VueKeyValueInput },
+  data: () => ({
+    example: {}
+  })
+}
+</script>
+```
