@@ -39,6 +39,6 @@
   "main": "dist/vue-key-value-input.umd.min.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BenoitAverty/vue-key-value-input.git"
+    "url": "https://github.com/Ouest-France/platform-library-javascript-vueKeyValueInput.git"
   }
 }
