@@ -16,10 +16,11 @@
       <key-value-input 
         keysLabel="Key"
         valuesLabel="Value"
-        :value="{ key1: 'value1' }"
-        @input="v => example3 = v"
+        v-model="example3"
       />
-      <p>{{ JSON.stringify(example3)}}</p>
+      <p>Write some json : <br/>
+      <textarea v-model="example3String">
+      </textarea></p>
     </v-app>
   </div>
 </template>
@@ -37,5 +38,19 @@ export default {
     example2: { key1: "value1" },
     example3: null,
   }),
+  computed: {
+    example3String: {
+      get() {
+        return JSON.stringify(this.example3);
+      },
+      set(v) {
+        try {
+          this.example3 = JSON.parse(v);
+        } catch (e) {
+          // Do not update if the object is invalid
+        }
+      },
+    },
+  },
 };
 </script>
