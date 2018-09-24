@@ -34,8 +34,7 @@
 </template>
 
 <script>
-const isString = v =>
-  (v === null) | (v === undefined) | (typeof v === "string");
+const isString = v => v === null || v === undefined || typeof v === "string";
 
 // add a property with key/value to the given object only if the key isn't already present
 const addPropIfNotPresent = (obj, [key, value]) =>
