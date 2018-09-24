@@ -173,16 +173,20 @@ describe("HelloWorld.vue", () => {
     let wrapper;
     beforeEach(() => {
       // Mount an empty key-value-input
-      wrapper = mountKeyValueInput({ value: { key1: "value1" } });
+      wrapper = mountKeyValueInput({
+        value: { key1: "value1", key2: "value2" },
+      });
     });
 
     it('fires a "input" event with the correct object when a key is set in the first field', () => {
       // simulate input event on the v-text-field
       const keyInput = wrapper.find('v-text-field-stub[data-test="key-input"]');
-      keyInput.vm.$emit("input", "key2");
+      keyInput.vm.$emit("input", "key3");
 
       expect(wrapper.emitted().input).toHaveLength(1);
-      expect(wrapper.emitted().input[0]).toEqual([{ key2: "value1" }]);
+      expect(wrapper.emitted().input[0]).toEqual([
+        { key3: "value1", key2: "value2" },
+      ]);
     });
 
     it('fires a "input" event with the correct object when a value is set in the first field', () => {
@@ -193,15 +197,30 @@ describe("HelloWorld.vue", () => {
       valueInput.vm.$emit("input", "value2");
 
       expect(wrapper.emitted().input).toHaveLength(1);
-      expect(wrapper.emitted().input[0]).toEqual([{ key1: "value2" }]);
+      expect(wrapper.emitted().input[0]).toEqual([
+        { key1: "value2", key2: "value2" },
+      ]);
+    });
+
+    it('fires a "input" event with the correct object when a value is set in the second field', () => {
+      // simulate input event on the v-text-field
+      const valueInput = wrapper
+        .findAll('v-text-field-stub[data-test="value-input"]')
+        .at(1);
+      valueInput.vm.$emit("input", "testValue");
+
+      expect(wrapper.emitted().input).toHaveLength(1);
+      expect(wrapper.emitted().input[0]).toEqual([
+        { key1: "value1", key2: "testValue" },
+      ]);
     });
 
     it("doesn't fire an event if the value wouldn't change", () => {
-      // simulate input event on the v-text-field
-      const valueInput = wrapper.find(
-        'v-text-field-stub[data-test="value-input"]',
-      );
-      valueInput.vm.$emit("input", "value1");
+      // simulate input event on the second row value input
+      const valueInput = wrapper
+        .findAll('v-text-field-stub[data-test="value-input"]')
+        .at(1);
+      valueInput.vm.$emit("input", "value2");
 
       expect(wrapper.emitted().input).toBeUndefined();
     });
@@ -215,7 +234,9 @@ describe("HelloWorld.vue", () => {
 
       // We receive an input event and update the value accordingly (classic behavior of a controlled component)
       expect(wrapper.emitted().input).toHaveLength(1);
-      expect(wrapper.emitted().input[0]).toEqual([{ key1: "value2" }]);
+      expect(wrapper.emitted().input[0]).toEqual([
+        { key1: "value2", key2: "value2" },
+      ]);
       wrapper.setProps({ value: wrapper.emitted().input[0][0] });
 
       // Check that we have no new events
@@ -252,6 +273,115 @@ describe("HelloWorld.vue", () => {
       expect(valuesInputs).toHaveLength(1);
       expect(keysInputs.at(0).attributes()).toHaveProperty("value", "");
       expect(valuesInputs.at(0).attributes()).toHaveProperty("value", "");
+    });
+  });
+
+  describe("Handling duplicate", () => {
+    let wrapper;
+    beforeEach(() => {
+      // Mount an empty key-value-input
+      wrapper = mountKeyValueInput({
+        value: { key1: "value1", key2: "value2" },
+      });
+    });
+
+    it("Keeps the first value when a key is in duplicate", () => {
+      // simulate input event on the last v-text-field
+      const keyInput = wrapper
+        .findAll('v-text-field-stub[data-test="key-input"]')
+        .at(2);
+      keyInput.vm.$emit("input", "key2");
+
+      expect(wrapper.emitted().input).toBeUndefined(); // Doesn't emit because the value would be unchanged
+    });
+
+    it("shows an error on a row with a duplicate key", () => {
+      // simulate input event on the last v-text-field
+      const keyInput = wrapper
+        .findAll('v-text-field-stub[data-test="key-input"]')
+        .at(2);
+      keyInput.vm.$emit("input", "key2");
+      const valueInput = wrapper
+        .findAll('v-text-field-stub[data-test="value-input"]')
+        .at(2);
+
+      expect(keyInput.attributes()).toHaveProperty("error");
+      expect(valueInput.attributes()).toHaveProperty("error");
+      expect(keyInput.attributes()).toHaveProperty(
+        "error-messages",
+        "This key is a duplicate.",
+      );
+      expect(valueInput.attributes()).toHaveProperty(
+        "error-messages",
+        "This value won't be used.",
+      );
+    });
+
+    it("Uses custom error messages if given.", () => {
+      // Mount an empty key-value-input
+      wrapper = mountKeyValueInput({
+        value: { key1: "value1" },
+        duplicateKeyErrorMessage: "Cette propriété est un doublon.",
+        duplicateLabelErrorMessage: "",
+      });
+
+      // simulate input event on the last v-text-field
+      const keyInput = wrapper
+        .findAll('v-text-field-stub[data-test="key-input"]')
+        .at(1);
+      keyInput.vm.$emit("input", "key1");
+      const valueInput = wrapper
+        .findAll('v-text-field-stub[data-test="value-input"]')
+        .at(2);
+
+      expect(keyInput.attributes()).toHaveProperty(
+        "error-messages",
+        "Cette propriété est un doublon.",
+      );
+      expect(valueInput.attributes()).not.toHaveProperty("error-messages");
+    });
+
+    it("keeps duplicates in memory when prop is updated (case of not changing data)", () => {
+      // simulate input event on the v-text-field
+      const keyInput = wrapper.find('v-text-field-stub[data-test="key-input"]');
+      // First and second row become duplicates
+      keyInput.vm.$emit("input", "key2");
+
+      // We receive an input event and update the value accordingly (classic behavior of a controlled component)
+      expect(wrapper.emitted().input).toHaveLength(1);
+      expect(wrapper.emitted().input[0]).toEqual([{ key2: "value1" }]);
+      wrapper.setProps({ value: wrapper.emitted().input[0][0] });
+
+      // Check that the second row is still present in error
+      const keyInputs = wrapper.findAll(
+        'v-text-field-stub[data-test="key-input"]',
+      );
+      expect(keyInputs).toHaveLength(3);
+      expect(keyInputs.at(1).attributes()).toHaveProperty("error");
+    });
+
+    it("Resets duplicates when value is updated from outside the component", () => {
+      const keyInput = wrapper
+        .findAll('v-text-field-stub[data-test="key-input"]')
+        .at(1);
+      // First and second row become duplicates by changing the second row
+      keyInput.vm.$emit("input", "key1");
+
+      // Add a row through props
+      wrapper.setProps({ value: { key1: "value1", key3: "value3" } });
+
+      // Check that the second row is not in error and contains the new value
+      const keyInputs = wrapper.findAll(
+        'v-text-field-stub[data-test="key-input"]',
+      );
+      const valueInputs = wrapper.findAll(
+        'v-text-field-stub[data-test="value-input"]',
+      );
+      expect(keyInputs).toHaveLength(3);
+      expect(keyInputs.at(1).attributes()).not.toHaveProperty("error");
+      expect(keyInputs.at(1).attributes()).toHaveProperty("value", "key3");
+      expect(valueInputs.at(1).attributes()).not.toHaveProperty("error");
+      expect(valueInputs.at(1).attributes()).toHaveProperty("value", "value3");
     });
   });
 });
